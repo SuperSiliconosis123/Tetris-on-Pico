@@ -188,28 +188,15 @@ if __name__=='__main__':
         'ctrl': False 
     }
 
-    class colour():
-        black = 0x000000
-        white = 0xffffff
-        red = 0xff0000
-        lime = 0x00ff00
-        blue = 0x0000ff
-        yellow = 0xffff00
-        cyan = 0x00ffff
-        magenta = 0xff00ff
-        silver = 0xc0c0c0
-        grey = 0x808080
-        maroon = 0x800000
-        olive = 0x808000
-        green = 0x008000
-        purple = 0x800080
-        teal = 0x008080
-        navy = 0x000080
+    # Colour Mixing Routine
+    def colour(R,G,B): # Compact method!
+        mix1 = ((R&0xF8)*256) + ((G&0xFC)*8) + ((B&0xF8)>>3)
+        return (mix1 & 0xFF) *256 + int((mix1 & 0xFF00) /256) # low nibble first
 
     class tetris():
         def start():
             LCD.fill(colour.black)
-            LCD.text('TETRIS', 10, 10, colour.white)
+            #LCD.text('TETRIS', 10, 10, colour.white)
         #def select():
         #def tetris():
         #def highscore():
