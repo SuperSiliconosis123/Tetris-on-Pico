@@ -195,8 +195,8 @@ if __name__=='__main__':
 
     class tetris():
         def start():
-            LCD.fill(colour.black)
-            #LCD.text('TETRIS', 10, 10, colour.white)
+            LCD.fill(colour(0, 0, 0))
+            LCD.fill_rect
         #def select():
         #def tetris():
         #def highscore():
