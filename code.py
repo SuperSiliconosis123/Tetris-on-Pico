@@ -3,6 +3,7 @@ from machine import Pin,SPI,PWM
 import framebuf
 import time
 import os
+import _thread
 
 BL = 13
 DC = 8
@@ -175,6 +176,46 @@ if __name__=='__main__':
     right = Pin(20,Pin.IN,Pin.PULL_UP)
     ctrl = Pin(3,Pin.IN,Pin.PULL_UP)
     
+    input = {
+        'a': False, 
+        'b': False, 
+        'x': False, 
+        'y': False, 
+        'up': False, 
+        'down': False, 
+        'left': False, 
+        'right': False, 
+        'ctrl': False 
+    }
+
+    class colour():
+        black = 0x000000
+        white = 0xffffff
+        red = 0xff0000
+        lime = 0x00ff00
+        blue = 0x0000ff
+        yellow = 0xffff00
+        cyan = 0x00ffff
+        magenta = 0xff00ff
+        silver = 0xc0c0c0
+        grey = 0x808080
+        maroon = 0x800000
+        olive = 0x808000
+        green = 0x008000
+        purple = 0x800080
+        teal = 0x008080
+        navy = 0x000080
+
+    class tetris():
+        def start():
+            LCD.fill(colour.black)
+            LCD.text('TETRIS', 10, 10, colour.white)
+        #def select():
+        #def tetris():
+        #def highscore():
+
+    tetris.start()
+    """
     while(1):
         if keyA.value() == 0:
             LCD.fill_rect(208,15,30,30,LCD.red)
@@ -183,14 +224,12 @@ if __name__=='__main__':
             LCD.fill_rect(208,15,30,30,LCD.white)
             LCD.rect(208,15,30,30,LCD.red)
             
-            
         if(keyB.value() == 0):
             LCD.fill_rect(208,75,30,30,LCD.red)
             print("B")
         else :
             LCD.fill_rect(208,75,30,30,LCD.white)
             LCD.rect(208,75,30,30,LCD.red)
-            
             
         if(keyX.value() == 0):
             LCD.fill_rect(208,135,30,30,LCD.red)
@@ -244,6 +283,6 @@ if __name__=='__main__':
         LCD.show()
     time.sleep(1)
     LCD.fill(0xFFFF)
-
+"""
 
 
