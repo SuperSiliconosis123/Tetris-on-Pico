@@ -1,9 +1,12 @@
-
 from machine import Pin,SPI,PWM
+from definitions import *
 import framebuf
 import time
+import utime
 import os
-import _thread
+import math
+import random
+
 
 BL = 13
 DC = 8
@@ -159,11 +162,7 @@ if __name__=='__main__':
     pwm.freq(1000)
     pwm.duty_u16(32768)#max 65535
 
-    LCD = LCD_1inch3()
-    #color BRG
-    LCD.fill(LCD.white)
-    LCD.show()
-    
+    lcd = LCD_1inch3()
 
     keyA = Pin(15,Pin.IN,Pin.PULL_UP)
     keyB = Pin(17,Pin.IN,Pin.PULL_UP)
@@ -188,88 +187,24 @@ if __name__=='__main__':
         'ctrl': False 
     }
 
-    # Colour Mixing Routine
-    def colour(R,G,B): # Compact method!
-        mix1 = ((R&0xF8)*256) + ((G&0xFC)*8) + ((B&0xF8)>>3)
-        return (mix1 & 0xFF) *256 + int((mix1 & 0xFF00) /256) # low nibble first
-
     class tetris():
         def start():
-            LCD.fill(colour(0, 0, 0))
-            LCD.fill_rect
+            lcd.fill(colour(0, 0, 0))
+            c = colour(255, 255, 255)
+            lcd.rect(220, 10, 10, 30, c, True)
+            lcd.rect(200, 20, 20, 10, c, True)
+            lcd.rect(200, 50, 30, 10, c, True)
+            lcd.rect(222, 60, 8, 10, c, True)
+            lcd.rect(211, 60, 8, 10, c, True)
+            lcd.rect(200, 60, 8, 10, c, True)
+            lcd.rect(220, 80, 10, 30, c, True)
+            lcd.rect(200, 90, 20, 10, c, True)
+            lcd.rect(200, 120, 30, 10, c, True)
+            lcd.rect(220, 130, 10, 10, c, True)
+            tri_filled(230, 140, 220, 140, 220, 150, c)
+            lcd.show()
         #def select():
         #def tetris():
         #def highscore():
 
     tetris.start()
-    """
-    while(1):
-        if keyA.value() == 0:
-            LCD.fill_rect(208,15,30,30,LCD.red)
-            print("A")
-        else :
-            LCD.fill_rect(208,15,30,30,LCD.white)
-            LCD.rect(208,15,30,30,LCD.red)
-            
-        if(keyB.value() == 0):
-            LCD.fill_rect(208,75,30,30,LCD.red)
-            print("B")
-        else :
-            LCD.fill_rect(208,75,30,30,LCD.white)
-            LCD.rect(208,75,30,30,LCD.red)
-            
-        if(keyX.value() == 0):
-            LCD.fill_rect(208,135,30,30,LCD.red)
-            print("C")
-        else :
-            LCD.fill_rect(208,135,30,30,LCD.white)
-            LCD.rect(208,135,30,30,LCD.red)
-            
-        if(keyY.value() == 0):
-            LCD.fill_rect(208,195,30,30,LCD.red)
-            print("D")
-        else :
-            LCD.fill_rect(208,195,30,30,LCD.white)
-            LCD.rect(208,195,30,30,LCD.red)
-            
-        if(up.value() == 0):
-            LCD.fill_rect(60,60,30,30,LCD.red)
-            print("UP")
-        else :
-            LCD.fill_rect(60,60,30,30,LCD.white)
-            LCD.rect(60,60,30,30,LCD.red)
-            
-        if(dowm.value() == 0):
-            LCD.fill_rect(60,150,30,30,LCD.red)
-            print("DOWM")
-        else :
-            LCD.fill_rect(60,150,30,30,LCD.white)
-            LCD.rect(60,150,30,30,LCD.red)
-            
-        if(left.value() == 0):
-            LCD.fill_rect(15,105,30,30,LCD.red)
-            print("LEFT")
-        else :
-            LCD.fill_rect(15,105,30,30,LCD.white)
-            LCD.rect(15,105,30,30,LCD.red)
-        
-        if(right.value() == 0):
-            LCD.fill_rect(105,105,30,30,LCD.red)
-            print("RIGHT")
-        else :
-            LCD.fill_rect(105,105,30,30,LCD.white)
-            LCD.rect(105,105,30,30,LCD.red)
-        
-        if(ctrl.value() == 0):
-            LCD.fill_rect(60,105,30,30,LCD.red)
-            print("CTRL")
-        else :
-            LCD.fill_rect(60,105,30,30,LCD.white)
-            LCD.rect(60,105,30,30,LCD.red)
-                       
-        LCD.show()
-    time.sleep(1)
-    LCD.fill(0xFFFF)
-"""
-
-
