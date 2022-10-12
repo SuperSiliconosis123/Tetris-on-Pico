@@ -459,7 +459,7 @@ def circle(x,y,r,c):
 lcd = LCD_1inch3() # Start screen 
 lcd.fill(colour(0,0,0)) # BLACK 
 lcd.show()
-'''
+
 # Set up buttons & joystick
 keyA = Pin(15,Pin.IN,Pin.PULL_UP)
 keyB = Pin(17,Pin.IN,Pin.PULL_UP)
@@ -471,8 +471,8 @@ down = Pin(18,Pin.IN,Pin.PULL_UP)
 left = Pin(16,Pin.IN,Pin.PULL_UP)
 right = Pin(20,Pin.IN,Pin.PULL_UP)
 ctrl = Pin(3,Pin.IN,Pin.PULL_UP)
-if keyA.value() == 0: print("A Pressed")
-'''
+# if keyA.value() == 0: print("A Pressed")
+
 input = {
     'a': False, 
     'b': False, 
@@ -487,6 +487,7 @@ input = {
 
 class tetris():
     def start():
+        # draw home screen
         lcd.fill(colour(0, 0, 0))
         c = colour(255, 255, 255)
         lcd.rect(220, 10, 10, 30, c, True)
@@ -501,8 +502,11 @@ class tetris():
         lcd.rect(220, 130, 10, 10, c, True)
         tri_filled(230, 140, 220, 140, 220, 150, c)
         lcd.show()
+        # wait until ctrl is pressed
+        while True: 
+            if ctrl.value() == 0: break
     #def select():
     #def tetris():
     #def highscore():
-
-tetris.start()
+while True:
+    tetris.start()
