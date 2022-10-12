@@ -510,3 +510,6 @@ class tetris():
     #def highscore():
 while True:
     tetris.start()
+    lcd.fill(colour(255, 255, 255))
+    lcd.show()
+    utime.sleep(1)
