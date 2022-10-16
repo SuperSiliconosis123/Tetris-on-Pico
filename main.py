@@ -289,7 +289,7 @@ def printchar(letter,xpos,ypos,size,c):
         xpos=origin
         ypos+=size
     
-def delchar(xpos,ypos,size,):
+def delchar(xpos,ypos,size,c):
     if size == 1:
         charwidth = 5
         charheight = 9
@@ -299,8 +299,7 @@ def delchar(xpos,ypos,size,):
     if size == 3:
         charwidth = 15
         charheight = 27
-    c=colour(40,40,40)
-    lcd.fill_rect(xpos,ypos,charwidth,charheight,0) #xywh
+    lcd.fill_rect(xpos,ypos,charwidth,charheight,c) #xywh
 
 def printstring(string,xpos,ypos,size,c):   
     if size == 1:
@@ -325,139 +324,17 @@ def centrestring(string,ypos,size,c):
     printstring(string,xpos,ypos,size,c)
 # ========= End of Improved text system ==================
 
-# ========== Start of Graphics routines =================        
 # Colour Mixing Routine
 def colour(R,G,B): # Compact method!
     mix1 = ((R&0xF8)*256) + ((G&0xFC)*8) + ((B&0xF8)>>3)
     return  (mix1 & 0xFF) *256  + int((mix1 & 0xFF00) /256) # low nibble first
 
-# ========== Start of Triangles code =============
-# Modified from https://github.com/SpiderMaf/PiPicoDsply/blob/main/filled-triangles.py
-# To work on WaveShare Pi Pico displays
-class Point:
-    def __init__(self,x,y):
-        self.X=x
-        self.Y=y
-    def __str__(self):
-        return "Point(%s,%s)"%(self.X,self.Y)
-        
-class Triangle:
-    def __init__(self,p1,p2,p3):
-        self.P1=p1
-        self.P2=p2
-        self.P3=p3
-
-    def __str__(self):
-        return "Triangle(%s,%s,%s)"%(self.P1,self.P2,self.P3)
-    
-    def draw(self):
-        print("I should draw now")
-        self.fillTri()
-    # Filled triangle routines ported from http://www.sunshine2k.de/coding/java/TriangleRasterization/TriangleRasterization.html      
-    def sortVerticesAscendingByY(self):    
-        if self.P1.Y > self.P2.Y:
-            vTmp = self.P1
-            self.P1 = self.P2
-            self.P2 = vTmp
-        
-        if self.P1.Y > self.P3.Y:
-            vTmp = self.P1
-            self.P1 = self.P3
-            self.P3 = vTmp
-
-        if self.P2.Y > self.P3.Y:
-            vTmp = self.P2
-            self.P2 = self.P3
-            self.P3 = vTmp
-        
-    def fillTri(self):
-        self.sortVerticesAscendingByY()
-        if self.P2.Y == self.P3.Y:
-            fillBottomFlatTriangle(self.P1, self.P2, self.P3)
-        else:
-            if self.P1.Y == self.P2.Y:
-                fillTopFlatTriangle(self.P1, self.P2, self.P3)
-            else:
-                newx = int(self.P1.X + (float(self.P2.Y - self.P1.Y) / float(self.P3.Y - self.P1.Y)) * (self.P3.X - self.P1.X))
-                newy = self.P2.Y                
-                pTmp = Point( newx,newy )
-                fillBottomFlatTriangle(self.P1, self.P2, pTmp)
-                fillTopFlatTriangle(self.P2, pTmp, self.P3)
-
-def fillBottomFlatTriangle(p1,p2,p3):
-    slope1 = float(p2.X - p1.X) / float (p2.Y - p1.Y)
-    slope2 = float(p3.X - p1.X) / float (p3.Y - p1.Y)
-
-    x1 = p1.X
-    x2 = p1.X + 0.5
-
-    for scanlineY in range(p1.Y,p2.Y):
-#        lcd.pixel_span(int(x1), scanlineY, int(x2)-int(x1))   # Switch pixel_span() to hline() / Pimoroni to WS
-        lcd.hline(int(x1),scanlineY, int(x2)-int(x1),c)
-        x1 += slope1
-        x2 += slope2
-
-def fillTopFlatTriangle(p1,p2,p3):
-    slope1 = float(p3.X - p1.X) / float(p3.Y - p1.Y)
-    slope2 = float(p3.X - p2.X) / float(p3.Y - p2.Y)
-
-    x1 = p3.X
-    x2 = p3.X + 0.5
-
-    for scanlineY in range (p3.Y,p1.Y-1,-1):
-#        lcd.pixel_span(int(x1), scanlineY, int(x2)-int(x1))  # Switch pixel_span() to hline() / Pimoroni to WS
-        lcd.hline(int(x1),scanlineY, int(x2)-int(x1),c)
-        x1 -= slope1
-        x2 -= slope2
-            
-# ============== End of Triangles Code ===============
-
-# ============== GFX Routines ============
-def ring_old(cx,cy,r,cc):   # Draws a circle - with centre (x,y), radius, colour 
-    for angle in range(181):  
-        y3=int(r*math.sin(math.radians(angle/2))) # Uses Trigonometry
-        x3=int(r*math.cos(math.radians(angle/2)))
-        lcd.pixel(cx-x3,cy+y3,cc)  # 4 quadrants
-        lcd.pixel(cx-x3,cy-y3,cc)
-        lcd.pixel(cx+x3,cy+y3,cc)
-        lcd.pixel(cx+x3,cy-y3,cc)
-
-def ring(x,y,r,c):
-    lcd.pixel(x-r,y,c)
-    lcd.pixel(x+r,y,c)
-    lcd.pixel(x,y-r,c)
-    lcd.pixel(x,y+r,c)
-
-    for i in range(1,r):
-        a = int(math.sqrt(r*r-i*i)) # Uses Pythagoras
-        lcd.pixel(x-a,y-i,c)
-        lcd.pixel(x+a,y-i,c)
-        lcd.pixel(x-a,y+i,c)
-        lcd.pixel(x+a,y+i,c)
-        lcd.pixel(x-i,y-a,c)
-        lcd.pixel(x+i,y-a,c)
-        lcd.pixel(x-i,y+a,c)
-        lcd.pixel(x+i,y+a,c)
-
-def triangle(x1,y1,x2,y2,x3,y3,c): # Draw outline triangle
-    lcd.line(x1,y1,x2,y2,c)
-    lcd.line(x2,y2,x3,y3,c)
-    lcd.line(x3,y3,x1,y1,c)
-    
-def tri_filled(x1,y1,x2,y2,x3,y3,c): # Draw filled triangle
-    t=Triangle(Point(x1,y1),Point(x2,y2),Point(x3,y3)) # Define corners
-    t.fillTri() # Call main code block  
-
-def circle(x,y,r,c):
-    lcd.hline(x-r,y,r*2,c)
-    for i in range(1,r):
-        a = int(math.sqrt(r*r-i*i)) # Pythagoras!
-        lcd.hline(x-a,y+i,a*2,c) # Lower half
-        lcd.hline(x-a,y-i,a*2,c) # Upper half
-
+#same function as zfill
+def zfill(string, width):
+    return '{:0>{w}}'.format(string, w=width)
 # =================== Main ======================
 lcd = LCD_1inch3() # Start screen 
-lcd.fill(colour(0,0,0)) # BLACK 
+lcd.fill(65535)
 lcd.show()
 
 # Set up buttons & joystick
@@ -473,43 +350,238 @@ right = Pin(20,Pin.IN,Pin.PULL_UP)
 ctrl = Pin(3,Pin.IN,Pin.PULL_UP)
 # if keyA.value() == 0: print("A Pressed")
 
-input = {
-    'a': False, 
-    'b': False, 
-    'x': False, 
-    'y': False, 
-    'up': False, 
-    'down': False, 
-    'left': False, 
-    'right': False, 
-    'ctrl': False 
-}
 
 class tetris():
-    def start():
-        # draw home screen
-        lcd.fill(colour(0, 0, 0))
-        c = colour(255, 255, 255)
-        lcd.rect(220, 10, 10, 30, c, True)
-        lcd.rect(200, 20, 20, 10, c, True)
-        lcd.rect(200, 50, 30, 10, c, True)
-        lcd.rect(222, 60, 8, 10, c, True)
-        lcd.rect(211, 60, 8, 10, c, True)
-        lcd.rect(200, 60, 8, 10, c, True)
-        lcd.rect(220, 80, 10, 30, c, True)
-        lcd.rect(200, 90, 20, 10, c, True)
-        lcd.rect(200, 120, 30, 10, c, True)
-        lcd.rect(220, 130, 10, 10, c, True)
-        tri_filled(230, 140, 220, 140, 220, 150, c)
+    def help():
+        lcd.fill(0)
+        white = colour(255, 255, 255)
+        centrestring("Sorry!", 50, 3, white)
         lcd.show()
-        # wait until ctrl is pressed
-        while True: 
-            if ctrl.value() == 0: break
-    #def select():
-    #def tetris():
+        centrestring("This Feature is", 100, 2, white)
+        centrestring("Still in", 120, 2, white)
+        centrestring("Development!", 140, 2, white)
+        utime.sleep(1)
+        lcd.show()
+        centrestring("Press Y to Continue", 180, 1, white)
+        utime.sleep(1)
+        lcd.show()
+        while True:
+            if keyY.value() == 0: break
+    def start():
+        lcd.fill(0)
+        white = colour(255, 255, 255)
+        black = 0
+        yellow = colour(240, 240, 0)
+        # TETRIS side of the screen
+        printstring("TETRIS", 5, 5, 3, white)
+        lcd.rect(8, 40, 100, 200, white)
+        # level select outline and text
+        printstring("LEVEL", 145, 30, 2, white)
+        lcd.rect(126, 50, 101, 41, white)
+        lcd.hline(126, 70, 100, white)
+        lcd.vline(146, 50, 40, white)
+        lcd.vline(166, 50, 40, white)
+        lcd.vline(186, 50, 40, white)
+        lcd.vline(206, 50, 40, white)
+        lcd.fill_rect(127, 51, 19, 19, yellow)
+        printchar('0', 131, 54, 2, black)
+        printchar('1', 151, 54, 2, white)
+        printchar('2', 171, 54, 2, white)
+        printchar('3', 191, 54, 2, white)
+        printchar('4', 211, 54, 2, white)
+        printchar('5', 131, 74, 2, white)
+        printchar('6', 151, 74, 2, white)
+        printchar('7', 171, 74, 2, white)
+        printchar('8', 191, 74, 2, white)
+        printchar('9', 211, 74, 2, white)
+        # draw highscore grid
+        lcd.rect(125, 135, 102, 60, white)
+        lcd.vline(180, 135, 60, white)
+        lcd.hline(125, 150, 102, white)
+        lcd.hline(125, 165, 102, white)
+        lcd.hline(125, 180, 102, white)
+        printstring(" NAME  SCORE" ,129, 139, 1, white)
+        # get high scores for the grid
+        f = open("highscore")
+        printstring(f.readline().rstrip('\n'), 129, 154, 1, white)
+        printstring(f.readline().rstrip('\n'), 129, 169, 1, white)
+        printstring(f.readline().rstrip('\n'), 129, 184, 1, white)
+        # draw help text
+        printstring("X: CONTINUE", 133, 220, 1, white)
+        printstring("Y: HELP", 150, 230, 1, white)
+        # release the frame
+        lcd.show()
+        utime.sleep(0.4)
+        # ========== ACTION ==========
+        level = 0
+        up = False
+        down = False
+        while True:
+            if up == True or down == True:
+                if level == 0:
+                    if up == True:
+                        lcd.fill_rect(127, 51, 19, 19, black)
+                        printchar('0', 131, 54, 2, white)
+                        lcd.fill_rect(147, 51, 19, 19, yellow)
+                        printchar('1', 151, 54, 2, black)
+                elif level == 1:
+                    if up == True:
+                        lcd.fill_rect(147, 51, 19, 19, black)
+                        printchar('1', 151, 54, 2, white)
+                        lcd.fill_rect(167, 51, 19, 19, yellow)
+                        printchar('2', 171, 54, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(147, 51, 19, 19, black)
+                        printchar('1', 151, 54, 2, white)
+                        lcd.fill_rect(127, 51, 19, 19, yellow)
+                        printchar('0', 131, 54, 2, black)
+                elif level == 2:
+                    if up == True:
+                        lcd.fill_rect(167, 51, 19, 19, black)
+                        printchar('2', 171, 54, 2, white)
+                        lcd.fill_rect(187, 51, 19, 19, yellow)
+                        printchar('3', 191, 54, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(167, 51, 19, 19, black)
+                        printchar('2', 171, 54, 2, white)
+                        lcd.fill_rect(147, 51, 19, 19, yellow)
+                        printchar('1', 151, 54, 2, black)
+                elif level == 3:
+                    if up == True:
+                        lcd.fill_rect(187, 51, 19, 19, black)
+                        printchar('3', 191, 54, 2, white)
+                        lcd.fill_rect(207, 51, 19, 19, yellow)
+                        printchar('4', 211, 54, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(187, 51, 19, 19, black)
+                        printchar('3', 191, 54, 2, white)
+                        lcd.fill_rect(167, 51, 19, 19, yellow)
+                        printchar('2', 171, 54, 2, black)
+                elif level == 4:
+                    if up == True:
+                        lcd.fill_rect(207, 51, 19, 19, black)
+                        printchar('4', 211, 54, 2, white)
+                        lcd.fill_rect(127, 71, 19, 19, yellow)
+                        printchar('5', 131, 74, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(207, 51, 19, 19, black)
+                        printchar('4', 211, 54, 2, white)
+                        lcd.fill_rect(187, 51, 19, 19, yellow)
+                        printchar('3', 191, 54, 2, black)
+                elif level == 5:
+                    if up == True:
+                        lcd.fill_rect(127, 71, 19, 19, black)
+                        printchar('5', 131, 74, 2, white)
+                        lcd.fill_rect(147, 71, 19, 19, yellow)
+                        printchar('6', 151, 74, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(127, 71, 19, 19, black)
+                        printchar('5', 131, 74, 2, white)
+                        lcd.fill_rect(207, 51, 19, 19, yellow)
+                        printchar('4', 211, 54, 2, black)
+                elif level == 6:
+                    if up == True:
+                        lcd.fill_rect(147, 71, 19, 19, black)
+                        printchar('6', 151, 74, 2, white)
+                        lcd.fill_rect(167, 71, 19, 19, yellow)
+                        printchar('7', 171, 74, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(147, 71, 19, 19, black)
+                        printchar('6', 151, 74, 2, white)
+                        lcd.fill_rect(127, 71, 19, 19, yellow)
+                        printchar('5', 131, 74, 2, black)
+                elif level == 7:
+                    if up == True:
+                        lcd.fill_rect(167, 71, 19, 19, black)
+                        printchar('7', 171, 74, 2, white)
+                        lcd.fill_rect(187, 71, 19, 19, yellow)
+                        printchar('8', 191, 74, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(167, 71, 19, 19, black)
+                        printchar('7', 171, 74, 2, white)
+                        lcd.fill_rect(147, 71, 19, 19, yellow)
+                        printchar('6', 151, 74, 2, black)
+                elif level == 8:
+                    if up == True:
+                        lcd.fill_rect(187, 71, 19, 19, black)
+                        printchar('8', 191, 74, 2, white)
+                        lcd.fill_rect(207, 71, 19, 19, yellow)
+                        printchar('9', 211, 74, 2, black)
+                    elif down == True:
+                        lcd.fill_rect(187, 71, 19, 19, black)
+                        printchar('8', 191, 74, 2, white)
+                        lcd.fill_rect(167, 71, 19, 19, yellow)
+                        printchar('7', 171, 74, 2, black)
+                elif level == 9:
+                    if down == True:
+                        lcd.fill_rect(207, 71, 19, 19, black)
+                        printchar('9', 211, 74, 2, white)
+                        lcd.fill_rect(187, 71, 19, 19, yellow)
+                        printchar('8', 191, 74, 2, black)
+                lcd.show()
+                if up == True:
+                    level += 1
+                elif down == True:
+                    level -= 1
+                up = False
+                down = False
+                utime.sleep(0.15)
+            while True:
+                if right.value() == 0: up = True; break
+                if left.value() == 0: down = True; break
+                if keyX.value() == 0: return level
+                if keyY.value() == 0: return "help"
+    class game():
+        #screen is for writing directly to the screen. it is the array of aesthetic.
+        screen= [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        #board is for hitboxes and collision detection. it help differentiate between the static peices and the current peice
+        board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        piece = [0, 0] # piece indices for current and pending piece
+        # indices are as follows:
+        #   1: Straight
+        #   2: Square
+        #   3: T-Shape
+        #   4: L-Shape
+        #   5: Inverted L-shape
+        #   6: Skew
+        #   7: Inverted Skew
+        rotation = [0, 0] #rotation [current, pending]
+        position = [0, 0] #position [x, y]
+        def collisionCheck():
+            pass
+            
+        
+    def play(level):
+        score = 20
+        white = colour(255, 255, 255)
+        lcd.fill_rect(120, 0, 120, 255, colour(0, 0, 0))
+        printstring("SCORE: " + zfill(str(score), 5), 130, 10, 1, white)
+        #printstring()
+        lcd.show()
     #def highscore():
+
 while True:
-    tetris.start()
-    lcd.fill(colour(255, 255, 255))
-    lcd.show()
-    utime.sleep(1)
+    while True:
+        level = tetris.start()
+        if level == "help": tetris.help()
+        else: break
+    break
+tetris.play(level)
