@@ -570,11 +570,13 @@ class tetris():
             
         
     def play(level):
-        score = 20
+        score = 0
+        lines = 0
         white = colour(255, 255, 255)
         lcd.fill_rect(120, 0, 120, 255, colour(0, 0, 0))
         printstring("SCORE: " + zfill(str(score), 5), 130, 10, 1, white)
-        #printstring()
+        printstring("LINES: " + zfill(str(lines), 4), 135, 20, 1, white)
+        printstring("LEVEL: " + str(level), 148, 30, 1, white)
         lcd.show()
     #def highscore():
 
