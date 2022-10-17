@@ -371,10 +371,10 @@ class tetris():
         lcd.fill(0)
         white = colour(255, 255, 255)
         black = 0
-        yellow = colour(240, 240, 0)
+        highlight = colour(255, 255, 255) #currently white, while we are pretending he screen is monochrome. yellow would be (240, 240, 0)
         # TETRIS side of the screen
         printstring("TETRIS", 5, 5, 3, white)
-        lcd.rect(8, 40, 100, 200, white)
+        lcd.rect(8, 39, 101, 201, white)
         # level select outline and text
         printstring("LEVEL", 145, 30, 2, white)
         lcd.rect(126, 50, 101, 41, white)
@@ -383,7 +383,7 @@ class tetris():
         lcd.vline(166, 50, 40, white)
         lcd.vline(186, 50, 40, white)
         lcd.vline(206, 50, 40, white)
-        lcd.fill_rect(127, 51, 19, 19, yellow)
+        lcd.fill_rect(127, 51, 19, 19, highlight)
         printchar('0', 131, 54, 2, black)
         printchar('1', 151, 54, 2, white)
         printchar('2', 171, 54, 2, white)
@@ -422,101 +422,101 @@ class tetris():
                     if up == True:
                         lcd.fill_rect(127, 51, 19, 19, black)
                         printchar('0', 131, 54, 2, white)
-                        lcd.fill_rect(147, 51, 19, 19, yellow)
+                        lcd.fill_rect(147, 51, 19, 19, highlight)
                         printchar('1', 151, 54, 2, black)
                 elif level == 1:
                     if up == True:
                         lcd.fill_rect(147, 51, 19, 19, black)
                         printchar('1', 151, 54, 2, white)
-                        lcd.fill_rect(167, 51, 19, 19, yellow)
+                        lcd.fill_rect(167, 51, 19, 19, highlight)
                         printchar('2', 171, 54, 2, black)
                     elif down == True:
                         lcd.fill_rect(147, 51, 19, 19, black)
                         printchar('1', 151, 54, 2, white)
-                        lcd.fill_rect(127, 51, 19, 19, yellow)
+                        lcd.fill_rect(127, 51, 19, 19, highlight)
                         printchar('0', 131, 54, 2, black)
                 elif level == 2:
                     if up == True:
                         lcd.fill_rect(167, 51, 19, 19, black)
                         printchar('2', 171, 54, 2, white)
-                        lcd.fill_rect(187, 51, 19, 19, yellow)
+                        lcd.fill_rect(187, 51, 19, 19, highlight)
                         printchar('3', 191, 54, 2, black)
                     elif down == True:
                         lcd.fill_rect(167, 51, 19, 19, black)
                         printchar('2', 171, 54, 2, white)
-                        lcd.fill_rect(147, 51, 19, 19, yellow)
+                        lcd.fill_rect(147, 51, 19, 19, highlight)
                         printchar('1', 151, 54, 2, black)
                 elif level == 3:
                     if up == True:
                         lcd.fill_rect(187, 51, 19, 19, black)
                         printchar('3', 191, 54, 2, white)
-                        lcd.fill_rect(207, 51, 19, 19, yellow)
+                        lcd.fill_rect(207, 51, 19, 19, highlight)
                         printchar('4', 211, 54, 2, black)
                     elif down == True:
                         lcd.fill_rect(187, 51, 19, 19, black)
                         printchar('3', 191, 54, 2, white)
-                        lcd.fill_rect(167, 51, 19, 19, yellow)
+                        lcd.fill_rect(167, 51, 19, 19, highlight)
                         printchar('2', 171, 54, 2, black)
                 elif level == 4:
                     if up == True:
                         lcd.fill_rect(207, 51, 19, 19, black)
                         printchar('4', 211, 54, 2, white)
-                        lcd.fill_rect(127, 71, 19, 19, yellow)
+                        lcd.fill_rect(127, 71, 19, 19, highlight)
                         printchar('5', 131, 74, 2, black)
                     elif down == True:
                         lcd.fill_rect(207, 51, 19, 19, black)
                         printchar('4', 211, 54, 2, white)
-                        lcd.fill_rect(187, 51, 19, 19, yellow)
+                        lcd.fill_rect(187, 51, 19, 19, highlight)
                         printchar('3', 191, 54, 2, black)
                 elif level == 5:
                     if up == True:
                         lcd.fill_rect(127, 71, 19, 19, black)
                         printchar('5', 131, 74, 2, white)
-                        lcd.fill_rect(147, 71, 19, 19, yellow)
+                        lcd.fill_rect(147, 71, 19, 19, highlight)
                         printchar('6', 151, 74, 2, black)
                     elif down == True:
                         lcd.fill_rect(127, 71, 19, 19, black)
                         printchar('5', 131, 74, 2, white)
-                        lcd.fill_rect(207, 51, 19, 19, yellow)
+                        lcd.fill_rect(207, 51, 19, 19, highlight)
                         printchar('4', 211, 54, 2, black)
                 elif level == 6:
                     if up == True:
                         lcd.fill_rect(147, 71, 19, 19, black)
                         printchar('6', 151, 74, 2, white)
-                        lcd.fill_rect(167, 71, 19, 19, yellow)
+                        lcd.fill_rect(167, 71, 19, 19, highlight)
                         printchar('7', 171, 74, 2, black)
                     elif down == True:
                         lcd.fill_rect(147, 71, 19, 19, black)
                         printchar('6', 151, 74, 2, white)
-                        lcd.fill_rect(127, 71, 19, 19, yellow)
+                        lcd.fill_rect(127, 71, 19, 19, highlight)
                         printchar('5', 131, 74, 2, black)
                 elif level == 7:
                     if up == True:
                         lcd.fill_rect(167, 71, 19, 19, black)
                         printchar('7', 171, 74, 2, white)
-                        lcd.fill_rect(187, 71, 19, 19, yellow)
+                        lcd.fill_rect(187, 71, 19, 19, highlight)
                         printchar('8', 191, 74, 2, black)
                     elif down == True:
                         lcd.fill_rect(167, 71, 19, 19, black)
                         printchar('7', 171, 74, 2, white)
-                        lcd.fill_rect(147, 71, 19, 19, yellow)
+                        lcd.fill_rect(147, 71, 19, 19, highlight)
                         printchar('6', 151, 74, 2, black)
                 elif level == 8:
                     if up == True:
                         lcd.fill_rect(187, 71, 19, 19, black)
                         printchar('8', 191, 74, 2, white)
-                        lcd.fill_rect(207, 71, 19, 19, yellow)
+                        lcd.fill_rect(207, 71, 19, 19, highlight)
                         printchar('9', 211, 74, 2, black)
                     elif down == True:
                         lcd.fill_rect(187, 71, 19, 19, black)
                         printchar('8', 191, 74, 2, white)
-                        lcd.fill_rect(167, 71, 19, 19, yellow)
+                        lcd.fill_rect(167, 71, 19, 19, highlight)
                         printchar('7', 171, 74, 2, black)
                 elif level == 9:
                     if down == True:
                         lcd.fill_rect(207, 71, 19, 19, black)
                         printchar('9', 211, 74, 2, white)
-                        lcd.fill_rect(187, 71, 19, 19, yellow)
+                        lcd.fill_rect(187, 71, 19, 19, highlight)
                         printchar('8', 191, 74, 2, black)
                 lcd.show()
                 if up == True:
@@ -525,13 +525,14 @@ class tetris():
                     level -= 1
                 up = False
                 down = False
-                utime.sleep(0.15)
             while True:
-                if right.value() == 0: up = True; break
+                if right.value() == 0:
+                    up = True
+                    break
                 if left.value() == 0: down = True; break
                 if keyX.value() == 0: return level
                 if keyY.value() == 0: return "help"
-    class game():
+    class engine():
         #screen is for writing directly to the screen. it is the array of aesthetic.
         screen= [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -556,15 +557,22 @@ class tetris():
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
         piece = [0, 0] # piece indices for current and pending piece
         # indices are as follows:
-        #   1: Straight
-        #   2: Square
-        #   3: T-Shape
-        #   4: L-Shape
-        #   5: Inverted L-shape
-        #   6: Skew
-        #   7: Inverted Skew
+        #   1: Skew
+        #   2: Inverted Skew
+        #   3: Straight
+        #   4: Inverted L-Shape
+        #   5: L-Shape
+        #   6: Square
+        #   7: T-Shape
         rotation = [0, 0] #rotation [current, pending]
         position = [0, 0] #position [x, y]
+        totalPieceCount = 0
+        pieceCount = [0, 0, 0, 0, 0, 0, 0]
+        statisticBar = [0, 0, 0, 0, 0, 0, 0]
+        def generateStatistics():
+            i=0
+            while i < 6:
+                statisticsBar[i] = (pieceCount[i]/totalPieceCount) * 70
         def collisionCheck():
             pass
             
@@ -574,9 +582,23 @@ class tetris():
         lines = 0
         white = colour(255, 255, 255)
         lcd.fill_rect(120, 0, 120, 255, colour(0, 0, 0))
-        printstring("SCORE: " + zfill(str(score), 5), 130, 10, 1, white)
-        printstring("LINES: " + zfill(str(lines), 4), 135, 20, 1, white)
-        printstring("LEVEL: " + str(level), 148, 30, 1, white)
+        printstring("SCORE: " + zfill(str(score), 5), 130, 5, 1, white)
+        printstring("LINES: " + zfill(str(lines), 4), 135, 15, 1, white)
+        printstring("LEVEL: " + str(level), 148, 25, 1, white)
+        lcd.fill_rect(120, 40, 20, 10, white)
+        lcd.fill_rect(130, 50, 20, 10, white)
+        lcd.fill_rect(130, 70, 20, 10, white)
+        lcd.fill_rect(120, 80, 20, 10, white)
+        lcd.fill_rect(115, 103, 40, 10, white)
+        lcd.fill_rect(120, 126, 10, 20, white)
+        lcd.fill_rect(130, 136, 20, 10, white)
+        lcd.fill_rect(120, 156, 10, 20, white)
+        lcd.fill_rect(130, 156, 20, 10, white)
+        lcd.fill_rect(125, 186, 20, 20, white)
+        lcd.fill_rect(130, 226, 10, 10, white)
+        lcd.fill_rect(120, 216, 30, 10, white)
+        #lcd.fill_rect(160, 43, statistic, 14, white)
+        statistic = [0, 0, 0, 0, 0, 0, 0, 0] # [total, piece1, piece2, etc.] peices are listed
         lcd.show()
     #def highscore():
 
