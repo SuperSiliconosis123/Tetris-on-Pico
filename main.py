@@ -371,7 +371,8 @@ class tetris():
         lcd.fill(0)
         white = colour(255, 255, 255)
         black = 0
-        highlight = colour(255, 255, 255) #currently white, while we are pretending he screen is monochrome. yellow would be (240, 240, 0)
+        highlight = colour(255, 255, 255) #currently white, while we are pretending he screen is monochrome. 
+        # yellow  = colour(240, 240, 0)
         # TETRIS side of the screen
         printstring("TETRIS", 5, 5, 3, white)
         lcd.rect(8, 39, 101, 201, white)
@@ -533,7 +534,7 @@ class tetris():
                 if keyX.value() == 0: return level
                 if keyY.value() == 0: return "help"
     class engine():
-        #screen is for writing directly to the screen. it is the array of aesthetic.
+        # screen is for writing directly to the screen. it is the array of aesthetic.
         screen= [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -544,7 +545,8 @@ class tetris():
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        #board is for hitboxes and collision detection. it help differentiate between the static peices and the current peice
+        # board is for hitboxes and collision detection. it help differentiate between the static 
+        # peices and the current peice
         board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -555,7 +557,7 @@ class tetris():
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        piece = [0, 0] # piece indices for current and pending piece
+        piece = [random.randint(1, 7), random.randint(1, 7)] # piece indices for current and pending piece
         # indices are as follows:
         #   1: Skew
         #   2: Inverted Skew
@@ -598,7 +600,7 @@ class tetris():
         lcd.fill_rect(130, 226, 10, 10, white)
         lcd.fill_rect(120, 216, 30, 10, white)
         #lcd.fill_rect(160, 43, statistic, 14, white)
-        statistic = [0, 0, 0, 0, 0, 0, 0, 0] # [total, piece1, piece2, etc.] peices are listed
+        
         lcd.show()
     #def highscore():
 
