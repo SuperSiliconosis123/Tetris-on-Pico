@@ -545,8 +545,8 @@ class tetris():
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        # board is for hitboxes and collision detection. it help differentiate between the static 
-        # peices and the current peice
+        # board is for hitboxes and collision detection. 
+        # It help differentiate between the static peices and the current peice
         board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -557,7 +557,7 @@ class tetris():
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        piece = [random.randint(1, 7), random.randint(1, 7)] # piece indices for current and pending piece
+        piece = [0, 0] # piece indices for current and pending piece
         # indices are as follows:
         #   1: Skew
         #   2: Inverted Skew
@@ -600,7 +600,8 @@ class tetris():
         lcd.fill_rect(130, 226, 10, 10, white)
         lcd.fill_rect(120, 216, 30, 10, white)
         #lcd.fill_rect(160, 43, statistic, 14, white)
-        
+        while True:
+            position = [20, 5]
         lcd.show()
     #def highscore():
 
