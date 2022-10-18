@@ -367,12 +367,11 @@ class tetris():
         lcd.show()
         while True:
             if keyY.value() == 0: break
-    def start():
+    def levelSelect():
         lcd.fill(0)
         white = colour(255, 255, 255)
         black = 0
-        highlight = colour(255, 255, 255) #currently white, while we are pretending he screen is monochrome. 
-        # yellow  = colour(240, 240, 0)
+        highlight = colour(255, 255, 255) #currently white, while we are pretending he screen is monochrome. yellow would be (240, 240, 0)
         # TETRIS side of the screen
         printstring("TETRIS", 5, 5, 3, white)
         lcd.rect(8, 39, 101, 201, white)
@@ -533,57 +532,14 @@ class tetris():
                 if left.value() == 0: down = True; break
                 if keyX.value() == 0: return level
                 if keyY.value() == 0: return "help"
-    class engine():
-        # screen is for writing directly to the screen. it is the array of aesthetic.
-        screen= [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        # board is for hitboxes and collision detection. 
-        # It help differentiate between the static peices and the current peice
-        board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        piece = [0, 0] # piece indices for current and pending piece
-        # indices are as follows:
-        #   1: Skew
-        #   2: Inverted Skew
-        #   3: Straight
-        #   4: Inverted L-Shape
-        #   5: L-Shape
-        #   6: Square
-        #   7: T-Shape
-        rotation = [0, 0] #rotation [current, pending]
-        position = [0, 0] #position [x, y]
-        totalPieceCount = 0
-        pieceCount = [0, 0, 0, 0, 0, 0, 0]
-        statisticBar = [0, 0, 0, 0, 0, 0, 0]
-        def generateStatistics():
-            i=0
-            while i < 6:
-                statisticsBar[i] = (pieceCount[i]/totalPieceCount) * 70
-        def collisionCheck():
-            pass
-            
-        
-    def play(level):
+    
+    def init(level):
         score = 0
         lines = 0
         white = colour(255, 255, 255)
-        lcd.fill_rect(120, 0, 120, 255, colour(0, 0, 0))
+        lcd.fill_rect(120, 0, 120, 255, 0)
+        lcd.fill_rect(5, 5, 110, 30, 0)
+        printstring("TETRIS", 5, 10, 2, white)
         printstring("SCORE: " + zfill(str(score), 5), 130, 5, 1, white)
         printstring("LINES: " + zfill(str(lines), 4), 135, 15, 1, white)
         printstring("LEVEL: " + str(level), 148, 25, 1, white)
@@ -599,16 +555,88 @@ class tetris():
         lcd.fill_rect(125, 186, 20, 20, white)
         lcd.fill_rect(130, 226, 10, 10, white)
         lcd.fill_rect(120, 216, 30, 10, white)
-        #lcd.fill_rect(160, 43, statistic, 14, white)
-        while True:
-            position = [20, 5]
+        # lcd.fill_rect(160, 43, statistic, 14, white)
         lcd.show()
+    class engine:
+        # screen is for writing directly to the screen. it is the array of aesthetic.
+        screen= [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        # board is for hitboxes and collision detection 
+        # It help differentiate between the static peices and the current peice
+        board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        piece = [random.randint(0, 6), random.randint(0, 6)] # piece indices for current and pending piece
+        # indices are as follows:
+        #   0: Skew
+        #   1: Inverted Skew
+        #   2: Straight
+        #   3: Inverted L-Shape
+        #   4: L-Shape
+        #   5: Square
+        #   6: T-Shape
+        rotation = [0, 0] #rotation [current, pending]
+        position = [[0, 0], [0, 0]] #position [[x, y], [pendingX, pendingY]]
+        def showNextPiece(piece):
+            lcd.fill_rect(90, 0, 35, 30, 0)
+            if piece == 0:
+                lcd.fill_rect(97, 10, 16, 8, 65535)
+                lcd.fill_rect(105, 18, 16, 8, 65535)
+            elif piece == 1:
+                lcd.fill_rect(105, 10, 16, 8, 65535)
+                lcd.fill_rect(97, 18, 16, 8, 65535)
+            elif piece == 2:
+                lcd.fill_rect(93, 14, 32, 8, 65535)
+            elif piece == 3:
+                lcd.fill_rect(97, 10, 8, 8, 65535)
+                lcd.fill_rect(97, 18, 24, 8, 65535)
+            elif piece == 4:
+                lcd.fill_rect(97, 18, 8, 8, 65535)
+                lcd.fill_rect(97, 10, 24, 8, 65535)
+            elif piece == 5:
+                lcd.fill_rect(101, 10, 16, 16, 65535)
+            elif piece == 6:
+                lcd.fill_rect(97, 10, 24, 8, 65535)
+                lcd.fill_rect(105, 18, 8, 8, 65535)
+            lcd.show()
+        def collisionCheck(piece, rotation, x, y, board):
+            if len(board) == 10 and len(board[1]) == 20: continue
+            else:
+                while True:
+                    print("ERROR: BOARD PASSED TO COLLISION CHECK WAS NOT 10X20")
+            pieceRender  = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+            
     #def highscore():
 
 while True:
     while True:
-        level = tetris.start()
+        level = tetris.levelSelect()
         if level == "help": tetris.help()
         else: break
-    break
-tetris.play(level)
+    tetris.init(level)
+    tetris.engine.collisionCheck(1, 2, 5, 20, tetris.engine.board)
+    break        
