@@ -337,19 +337,6 @@ lcd = LCD_1inch3() # Start screen
 lcd.fill(65535)
 lcd.show()
 
-# Set up buttons & joystick
-keyA = Pin(15,Pin.IN,Pin.PULL_UP)
-keyB = Pin(17,Pin.IN,Pin.PULL_UP)
-keyX = Pin(19 ,Pin.IN,Pin.PULL_UP)
-keyY= Pin(21 ,Pin.IN,Pin.PULL_UP)
-
-up = Pin(2,Pin.IN,Pin.PULL_UP)
-down = Pin(18,Pin.IN,Pin.PULL_UP)
-left = Pin(16,Pin.IN,Pin.PULL_UP)
-right = Pin(20,Pin.IN,Pin.PULL_UP)
-ctrl = Pin(3,Pin.IN,Pin.PULL_UP)
-# if keyA.value() == 0: print("A Pressed")
-
 
 class tetris():
     def help():
@@ -756,8 +743,20 @@ class tetris():
                 except: pass
                 return render
                 
-                
     #def highscore():
+
+# Set up buttons & joystick
+keyA = Pin(15,Pin.IN,Pin.PULL_UP)
+keyB = Pin(17,Pin.IN,Pin.PULL_UP)
+keyX = Pin(19 ,Pin.IN,Pin.PULL_UP)
+keyY= Pin(21 ,Pin.IN,Pin.PULL_UP)
+
+up = Pin(2,Pin.IN,Pin.PULL_UP)
+down = Pin(18,Pin.IN,Pin.PULL_UP)
+left = Pin(16,Pin.IN,Pin.PULL_UP)
+right = Pin(20,Pin.IN,Pin.PULL_UP)
+ctrl = Pin(3,Pin.IN,Pin.PULL_UP)
+# if keyA.value() == 0: print("A Pressed")
 
 while True:
     while True:
@@ -771,22 +770,45 @@ while True:
         tetris.piece[1] = random.randint(0, 6)
         tetris.rotation[1] = 0
         tetris.position[1] = [5, 20]
-        #check for collisions
         pieceRender = tetris.renderPiece(tetris.piece[1], tetris.rotation[1], tetris.position[1])
+        #=============== check for collisions ===============
         pixelCount = 0
-        for i in range(9):
-            pixelCount += pieceRender[i].count(1)
-            for x in range(19):
-                if tetris.board[i][x] + pieceRender[i][x] == 2: break
+        for x in range(9):
+            pixelCount += pieceRender[x].count(1)
+            for y in range(19):
+                if tetris.board[x][y] + pieceRender[x][y] == 2: break
         if pixelCount != 4: break
-        #update variables (no collisions occured)
+        #===== update variables (no collisions occured) =====
         tetris.position[0] = tetris.position[1]
         tetris.rotation[0] = tetris.rotation[1]
         tetris.showNextPiece(tetris.piece[1])
-        #=========write board and piece to screen==========
-        
+        #========= write board and piece to screen ==========
+        for x in range(9):
+            for y in range(19):
+                if tetris.board[x][y] or pieceRender[x][y] == 1:
+                    lcd.fill_rect(9+(x*10), 40+(y*10), 10, 10, 65535)
+        lcd.show()
+        # receive input and update the peice position until the timer runs out
+        dropDelay = [1000, 900, 800, 700, 600, 500, 400, 300, 200, 100]
+        timerFinish = utime.ticks_ms() + dropDelay[level]
+        while timerFinish < utime.ticks_ms():
+            input = False
+            while input == False:
+                if keyA.value() == 0:
+                    pass
+                if keyB.value() == 0:
+                    pass
+                if keyX.value() == 0:
+                    pass
+                if keyY.value() == 0:
+                    tetris.help()
+                    utime.sleep(1)
+                if left.value() == 0:
+                    pass
+                elif right.value() == 0:
+                    pass
     lcd.fill(0)
     printstring("GAME", 50, 100, 3, 65535)
     printstring("OVER", 50, 150, 3, 65535)
     lcd.show()
-    break        
+    break
