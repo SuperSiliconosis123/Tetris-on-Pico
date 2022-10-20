@@ -6,9 +6,10 @@
 from machine import Pin,SPI,PWM
 import framebuf
 import utime
-import os
 import math
+import os
 import random
+import micropython
 # ============ Start of Drive Code ================
 #  == Copy and paste into your code ==
 BL = 13  # Pins used for WS 1.3" Pico LCD display screen
@@ -26,6 +27,8 @@ class LCD_1inch3(framebuf.FrameBuffer):
         self.cs = Pin(CS,Pin.OUT)
         self.rst = Pin(RST,Pin.OUT)
         
+        micropython.mem_info()
+        
         self.cs(1)
         self.spi = SPI(1)
         self.spi = SPI(1,1000_000)
@@ -36,10 +39,7 @@ class LCD_1inch3(framebuf.FrameBuffer):
         super().__init__(self.buffer, self.width, self.height, framebuf.RGB565)
         self.init_display()
         
-        self.red   =   0x07E0 # Pre-defined colours
-        self.green =   0x001f # Probably easier to use colour(r,g,b) defined below
-        self.blue  =   0xf800
-        self.white =   0xffff
+        micropython.mem_info()
         
     def write_cmd(self, cmd):
         self.cs(1)
@@ -367,6 +367,7 @@ class tetris():
         lcd.show()
         while True:
             if keyY.value() == 0: break
+            
     def levelSelect():
         lcd.fill(0)
         white = colour(255, 255, 255)
@@ -417,114 +418,42 @@ class tetris():
         up = False
         down = False
         while True:
-            if up == True or down == True:
-                if level == 0:
-                    if up == True:
-                        lcd.fill_rect(127, 51, 19, 19, black)
-                        printchar('0', 131, 54, 2, white)
-                        lcd.fill_rect(147, 51, 19, 19, highlight)
-                        printchar('1', 151, 54, 2, black)
-                elif level == 1:
-                    if up == True:
-                        lcd.fill_rect(147, 51, 19, 19, black)
-                        printchar('1', 151, 54, 2, white)
-                        lcd.fill_rect(167, 51, 19, 19, highlight)
-                        printchar('2', 171, 54, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(147, 51, 19, 19, black)
-                        printchar('1', 151, 54, 2, white)
-                        lcd.fill_rect(127, 51, 19, 19, highlight)
-                        printchar('0', 131, 54, 2, black)
-                elif level == 2:
-                    if up == True:
-                        lcd.fill_rect(167, 51, 19, 19, black)
-                        printchar('2', 171, 54, 2, white)
-                        lcd.fill_rect(187, 51, 19, 19, highlight)
-                        printchar('3', 191, 54, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(167, 51, 19, 19, black)
-                        printchar('2', 171, 54, 2, white)
-                        lcd.fill_rect(147, 51, 19, 19, highlight)
-                        printchar('1', 151, 54, 2, black)
-                elif level == 3:
-                    if up == True:
-                        lcd.fill_rect(187, 51, 19, 19, black)
-                        printchar('3', 191, 54, 2, white)
-                        lcd.fill_rect(207, 51, 19, 19, highlight)
-                        printchar('4', 211, 54, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(187, 51, 19, 19, black)
-                        printchar('3', 191, 54, 2, white)
-                        lcd.fill_rect(167, 51, 19, 19, highlight)
-                        printchar('2', 171, 54, 2, black)
+            if up == True:
+                if level <= 3:
+                    lcd.fill_rect(127+(level*20), 51, 19, 19, 0)
+                    printchar(str(level), 131+(level*20), 51, 2, 65535)
+                    lcd.fill_rect(127+((level+1)*20), 51, 19, 19, 65535)
+                    printchar(str(level+1), 131+((level+1)*20), 51, 2, 0)
                 elif level == 4:
-                    if up == True:
-                        lcd.fill_rect(207, 51, 19, 19, black)
-                        printchar('4', 211, 54, 2, white)
-                        lcd.fill_rect(127, 71, 19, 19, highlight)
-                        printchar('5', 131, 74, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(207, 51, 19, 19, black)
-                        printchar('4', 211, 54, 2, white)
-                        lcd.fill_rect(187, 51, 19, 19, highlight)
-                        printchar('3', 191, 54, 2, black)
-                elif level == 5:
-                    if up == True:
-                        lcd.fill_rect(127, 71, 19, 19, black)
-                        printchar('5', 131, 74, 2, white)
-                        lcd.fill_rect(147, 71, 19, 19, highlight)
-                        printchar('6', 151, 74, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(127, 71, 19, 19, black)
-                        printchar('5', 131, 74, 2, white)
-                        lcd.fill_rect(207, 51, 19, 19, highlight)
-                        printchar('4', 211, 54, 2, black)
-                elif level == 6:
-                    if up == True:
-                        lcd.fill_rect(147, 71, 19, 19, black)
-                        printchar('6', 151, 74, 2, white)
-                        lcd.fill_rect(167, 71, 19, 19, highlight)
-                        printchar('7', 171, 74, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(147, 71, 19, 19, black)
-                        printchar('6', 151, 74, 2, white)
-                        lcd.fill_rect(127, 71, 19, 19, highlight)
-                        printchar('5', 131, 74, 2, black)
-                elif level == 7:
-                    if up == True:
-                        lcd.fill_rect(167, 71, 19, 19, black)
-                        printchar('7', 171, 74, 2, white)
-                        lcd.fill_rect(187, 71, 19, 19, highlight)
-                        printchar('8', 191, 74, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(167, 71, 19, 19, black)
-                        printchar('7', 171, 74, 2, white)
-                        lcd.fill_rect(147, 71, 19, 19, highlight)
-                        printchar('6', 151, 74, 2, black)
-                elif level == 8:
-                    if up == True:
-                        lcd.fill_rect(187, 71, 19, 19, black)
-                        printchar('8', 191, 74, 2, white)
-                        lcd.fill_rect(207, 71, 19, 19, highlight)
-                        printchar('9', 211, 74, 2, black)
-                    elif down == True:
-                        lcd.fill_rect(187, 71, 19, 19, black)
-                        printchar('8', 191, 74, 2, white)
-                        lcd.fill_rect(167, 71, 19, 19, highlight)
-                        printchar('7', 171, 74, 2, black)
-                elif level == 9:
-                    if down == True:
-                        lcd.fill_rect(207, 71, 19, 19, black)
-                        printchar('9', 211, 74, 2, white)
-                        lcd.fill_rect(187, 71, 19, 19, highlight)
-                        printchar('8', 191, 74, 2, black)
-                lcd.show()
-                if up == True:
-                    level += 1
-                elif down == True:
-                    level -= 1
+                    lcd.fill_rect(207, 51, 19, 19, black)
+                    printchar('4', 211, 54, 2, white)
+                    lcd.fill_rect(127, 71, 19, 19, highlight)
+                    printchar('5', 131, 74, 2, black)
+                elif level < 9:
+                    lcd.fill_rect(127+(level*20), 71, 19, 19, 0)
+                    printchar(str(level), 131+(level*20), 71, 2, 65535)
+                    lcd.fill_rect(127+((level+1)*20), 71, 19, 19, 65535)
+                    printchar(str(level+1), 131+((level+1)*20), 71, 2, 0)
+                level += 1
                 up = False
-                down = False
+            if down == True:
+                if level >= 6:
+                    lcd.fill_rect(127+(level*20), 71, 19, 19, 0)
+                    printchar(str(level), 131+(level*20), 71, 2, 65535)
+                    lcd.fill_rect(127+((level-1)*20), 71, 19, 19, 65535)
+                    printchar(str(level-1), 131+((level-1)*20), 71, 2, 0)
+                elif level == 5:
+                    lcd.fill_rect(127, 71, 19, 19, 0)
+                    printchar('5', 131, 74, 2, 65535)
+                    lcd.fill_rect(207, 51, 19, 19, 65535)
+                    printchar('4', 211, 54, 2, 0)
+                elif level > 1:
+                    lcd.fill_rect(127+(level*20), 51, 19, 19, 0)
+                    printchar(str(level), 131+(level*20), 51, 2, 65535)
+                    lcd.fill_rect(127+((level-1)*20), 51, 19, 19, 65535)
+                    printchar(str(level-1), 131+((level-1)*20), 51, 2, 0)
+                level -= 1
+                doen = False
             while True:
                 if right.value() == 0:
                     up = True
@@ -532,6 +461,41 @@ class tetris():
                 if left.value() == 0: down = True; break
                 if keyX.value() == 0: return level
                 if keyY.value() == 0: return "help"
+    
+    # screen is for writing directly to the screen. it is the array of aesthetic.
+    screen= [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    # board is for hitboxes and collision detection 
+    # It help differentiate between the static peices and the current peice
+    board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    piece = [random.randint(0, 6), random.randint(0, 6)] # piece indices for current and pending piece
+    # indices are as follows:
+    #   0: Skew
+    #   1: Inverted Skew
+    #   2: Straight
+    #   3: Inverted L-Shape
+    #   4: L-Shape
+    #   5: Square
+    #   6: T-Shape
+    rotation = [0, 0] #rotation [current, pending]
+    position = [[0, 0], [0, 0]] #position [[x, y], [pendingX, pendingY]]
     
     def init(level):
         score = 0
@@ -557,79 +521,242 @@ class tetris():
         lcd.fill_rect(120, 216, 30, 10, white)
         # lcd.fill_rect(160, 43, statistic, 14, white)
         lcd.show()
-    class engine:
-        # screen is for writing directly to the screen. it is the array of aesthetic.
-        screen= [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        # board is for hitboxes and collision detection 
-        # It help differentiate between the static peices and the current peice
-        board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-        piece = [random.randint(0, 6), random.randint(0, 6)] # piece indices for current and pending piece
-        # indices are as follows:
-        #   0: Skew
-        #   1: Inverted Skew
-        #   2: Straight
-        #   3: Inverted L-Shape
-        #   4: L-Shape
-        #   5: Square
-        #   6: T-Shape
-        rotation = [0, 0] #rotation [current, pending]
-        position = [[0, 0], [0, 0]] #position [[x, y], [pendingX, pendingY]]
-        def showNextPiece(piece):
-            lcd.fill_rect(90, 0, 35, 30, 0)
-            if piece == 0:
-                lcd.fill_rect(97, 10, 16, 8, 65535)
-                lcd.fill_rect(105, 18, 16, 8, 65535)
-            elif piece == 1:
-                lcd.fill_rect(105, 10, 16, 8, 65535)
-                lcd.fill_rect(97, 18, 16, 8, 65535)
-            elif piece == 2:
-                lcd.fill_rect(93, 14, 32, 8, 65535)
-            elif piece == 3:
-                lcd.fill_rect(97, 10, 8, 8, 65535)
-                lcd.fill_rect(97, 18, 24, 8, 65535)
-            elif piece == 4:
-                lcd.fill_rect(97, 18, 8, 8, 65535)
-                lcd.fill_rect(97, 10, 24, 8, 65535)
-            elif piece == 5:
-                lcd.fill_rect(101, 10, 16, 16, 65535)
-            elif piece == 6:
-                lcd.fill_rect(97, 10, 24, 8, 65535)
-                lcd.fill_rect(105, 18, 8, 8, 65535)
-            lcd.show()
-        def collisionCheck(piece, rotation, x, y, board):
-            if len(board) == 10 and len(board[1]) == 20: continue
+    
+    def showNextPiece(piece):
+        lcd.fill_rect(90, 0, 35, 30, 0)
+        if piece == 0:
+            lcd.fill_rect(97, 10, 16, 8, 65535)
+            lcd.fill_rect(105, 18, 16, 8, 65535)
+        elif piece == 1:
+            lcd.fill_rect(105, 10, 16, 8, 65535)
+            lcd.fill_rect(97, 18, 16, 8, 65535)
+        elif piece == 2:
+            lcd.fill_rect(93, 14, 32, 8, 65535)
+        elif piece == 3:
+            lcd.fill_rect(97, 10, 8, 8, 65535)
+            lcd.fill_rect(97, 18, 24, 8, 65535)
+        elif piece == 4:
+            lcd.fill_rect(97, 18, 8, 8, 65535)
+            lcd.fill_rect(97, 10, 24, 8, 65535)
+        elif piece == 5:
+            lcd.fill_rect(101, 10, 16, 16, 65535)
+        elif piece == 6:
+            lcd.fill_rect(97, 10, 24, 8, 65535)
+            lcd.fill_rect(105, 18, 8, 8, 65535)
+        lcd.show()
+    
+    
+    def renderPiece(piece, rotation, position):
+        render = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+        x = position[0]
+        y = position[1]
+        if piece == 0:
+            if rotation == 0 or 2:
+                try: render[x-2][y-1] = 1
+                except: pass
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                return render
             else:
-                while True:
-                    print("ERROR: BOARD PASSED TO COLLISION CHECK WAS NOT 10X20")
-            pieceRender  = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-            
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x-1][y-3] = 1
+                except: pass
+                return render
+        elif piece == 1:
+            if rotation == 0 or 2:
+                try: render[x-2][y-2] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x][y-1] = 1
+                except: pass
+                return render
+            else:
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x][y-3] = 1
+                except: pass
+                return render
+        elif piece == 2:
+            if rotation == 0 or 2:
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x][y-3] = 1
+                except: pass
+                try: render[x][y-4] = 1
+                except: pass
+                return render
+            else:
+                try: render[x+2][y] = 1
+                except: pass
+                try: render[x+1][y] = 1
+                except: pass
+                try: render[x][y] = 1
+                except: pass
+                try: render[x-1][y] = 1
+                except: pass
+                return render
+        elif piece == 3:
+            if rotation == 0:
+                try: render[x-2][y-1] = 1
+                except: pass
+                try: render[x-2][y-2] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                return render
+            elif rotation == 1:
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x-1][y-3] = 1
+                except: pass
+                return render
+            elif rotation == 2:
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x-2][y-1] = 1
+                except: pass
+                return render
+            else:
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x][y-3] = 1
+                except: pass
+                try: render[x-1][y-3] = 1
+                except: pass
+                return render
+        elif piece == 4:
+            if rotation == 0:
+                try: render[x-2][y-2] = 1
+                except: pass
+                try: render[x-2][y-1] = 1
+                except: pass
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x][y-1] = 1
+                except: pass
+                return render
+            elif rotation == 1:
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x][y-3] = 1
+                except: pass
+                return render
+            elif rotation == 2:
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x-2][y-2] = 1
+                except: pass
+                return render
+            else:
+                try: render[x-1][y-3] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x][y-1] = 1
+                except: pass
+                return render
+        elif piece == 5:
+            try: render[x-1][y-1] = 1
+            except: pass
+            try: render[x-1][y-2] = 1
+            except: pass
+            try: render[x][y-1] = 1
+            except: pass
+            try: render[x][y-2] = 1
+            except: pass
+            return render
+        elif piece == 6:
+            if rotation == 0:
+                try: render[x-2][y-1] = 1
+                except: pass
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                return render
+            elif rotation == 1:
+                try: render[x][y-1] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                try: render[x][y-3] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                return render
+            elif rotation == 2:
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x-2][y-2] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                return render
+            else:
+                try: render[x-1][y-1] = 1
+                except: pass
+                try: render[x-1][y-2] = 1
+                except: pass
+                try: render[x-1][y-3] = 1
+                except: pass
+                try: render[x][y-2] = 1
+                except: pass
+                return render
+                
+                
     #def highscore():
 
 while True:
@@ -638,5 +765,27 @@ while True:
         if level == "help": tetris.help()
         else: break
     tetris.init(level)
-    tetris.engine.collisionCheck(1, 2, 5, 20, tetris.engine.board)
+    while True:
+        tetris.piece[0] = tetris.piece[1]
+        tetris.piece[1] = random.randint(0, 6)
+        tetris.rotation[1] = 0
+        tetris.position[1] = [5, 20]
+        #check for collisions
+        pieceRender = tetris.renderPiece(tetris.piece[1], tetris.rotation[1], tetris.position[1])
+        pixelCount = 0
+        for i in range(9):
+            pixelCount += pieceRender[i].count(1)
+            for x in range(19):
+                if tetris.board[i][x] + pieceRender[i][x] == 2: break
+        if pixelCount != 4: break
+        #update variables (no collisions occured)
+        tetris.position[0] = tetris.position[1]
+        tetris.rotation[0] = tetris.rotation[1]
+        tetris.showNextPiece(tetris.piece[1])
+        #=========write board and piece to screen==========
+        
+    lcd.fill(0)
+    printstring("GAME", 50, 100, 3, 65535)
+    printstring("OVER", 50, 150, 3, 65535)
+    lcd.show()
     break        
