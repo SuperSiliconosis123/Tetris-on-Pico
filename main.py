@@ -796,17 +796,17 @@ while True:
             while input == False:
                 if keyA.value() == 0:
                     pass
-                if keyB.value() == 0:
+                elif keyB.value() == 0:
                     pass
-                if keyX.value() == 0:
+                elif keyX.value() == 0:
                     pass
-                if keyY.value() == 0:
+                elif keyY.value() == 0:
                     tetris.help()
                     utime.sleep(1)
-                if left.value() == 0:
-                    pass
+                elif left.value() == 0:
+                    input = "left"
                 elif right.value() == 0:
-                    pass
+                    input = "right"
     lcd.fill(0)
     printstring("GAME", 50, 100, 3, 65535)
     printstring("OVER", 50, 150, 3, 65535)
