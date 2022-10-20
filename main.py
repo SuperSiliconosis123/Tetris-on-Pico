@@ -765,6 +765,7 @@ while True:
         if level == "help": tetris.help()
         else: break
     tetris.init(level)
+    # tetris.engine.collisionCheck(1, 2, 5, 20, tetris.engine.board)
     while True:
         tetris.piece[0] = tetris.piece[1]
         tetris.piece[1] = random.randint(0, 6)
