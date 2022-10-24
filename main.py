@@ -147,23 +147,23 @@ while True:
                 tetris.lines += len(completeLines)
                 tetris.initStats(level)
                 for y in completeLines:
-                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
