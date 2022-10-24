@@ -83,7 +83,26 @@ while True:
                 wait = True
             if play != False: break
         if play != False: break
-    tetris.initStats(level)
+    lcd.fill_rect(120, 0, 120, 255, 0)
+    lcd.fill_rect(5, 5, 110, 30, 0)
+    printstring("TETRIS", 5, 10, 2, 65535)
+    printstring("SCORE: " + '{:0>{w}}'.format(str(int(tetris.score)), w=5), 130, 5, 1, 65535)
+    printstring("LINES: " + '{:0>{w}}'.format(str(int(tetris.lines)), w=4), 135, 15, 1, 65535)
+    printstring("LEVEL: " + str(level), 148, 25, 1, 65535)
+    lcd.fill_rect(120, 40, 20, 10, 65535)# skew
+    lcd.fill_rect(130, 50, 20, 10, 65535)
+    lcd.fill_rect(130, 70, 20, 10, 65535)# inverted skew
+    lcd.fill_rect(120, 80, 20, 10, 65535)
+    lcd.fill_rect(115, 103, 40, 10, 65535)# straight
+    lcd.fill_rect(140, 126, 10, 20, 65535)# L
+    lcd.fill_rect(120, 136, 20, 10, 65535)
+    lcd.fill_rect(140, 156, 10, 20, 65535)# inverted L
+    lcd.fill_rect(120, 156, 20, 10, 65535)
+    lcd.fill_rect(125, 186, 20, 20, 65535)
+    lcd.fill_rect(130, 226, 10, 10, 65535)
+    lcd.fill_rect(120, 216, 30, 10, 65535)
+    # lcd.fill_rect(160, 43, statistic, 14, 65535)
+    lcd.show()
     while True:
         tetris.piece[0] = tetris.piece[1]
         tetris.piece[1] = random.randint(0, 6)
@@ -145,37 +164,45 @@ while True:
                 elif len(completeLines) == 3: tetris.score += (300*(level+1))
                 elif len(completeLines) == 4: tetris.score += (1200*(level+1))
                 tetris.lines += len(completeLines)
-                tetris.initStats(level)
                 for y in completeLines:
-                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 100, 10, 0)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 100, 10, 65535)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 100, 10, 0)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 100, 10, 65535)
                 lcd.show()
                 utime.sleep(0.4)
                 for y in completeLines:
-                    lcd.fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                    lcd.fill_rect(8, 39+((y-19)*(-10)), 100, 10, 0)
                 lcd.show()
                 utime.sleep(0.4)
-                for y in completeLines:
-                    for x in range(10):
-                        for i in range(19-y):
-                            board[x][y] = board[x][y+i+1]
+                while len(completeLines) > 0:
+                    for y in completeLines:
+                        for x in range(10):
+                            tetris.board[x][y] = tetris.board[x][y+1]
+                            if y < 18: tetris.board[x][y+1] = 1
+                            else: tetris.board[x][y+1] = 0
+                    completeLines = list([])
+                    for y in range(20):
+                        pixelCount = 0
+                        for x in range(10):
+                            pixelCount += tetris.board[x][y]
+                        if pixelCount == 10:
+                            completeLines.append(y)
+                tetris.updateStats(level)
                 break
             else: tetris.position[0][1] -= 1
             
-    lcd.fill_rect(110, 0, 130, 255, 0)
-    lcd.fill_rect(0, 0, 110, 30, 0)
-    printstring("GAME", 150, 70, 3, 65535)
-    printstring("OVER", 150, 100, 3, 65535)
+    lcd.fill_rect(110, 35, 130, 220, 0)
+    printstring("GAME", 140, 70, 3, 65535)
+    printstring("OVER", 140, 100, 3, 65535)
     lcd.show()
     break
