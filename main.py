@@ -91,10 +91,7 @@ while True:
         tetris.position = [[5, 20], [5, 20]]
         tetris.showNextPiece(tetris.piece[1])
         pieceRender = tetris.renderPiece(tetris.piece[0], tetris.rotation[0], tetris.position[0])
-        if tetris.collisionCheck(pieceRender) == 1:
-            print('collision 95')
-            break
-        else: print('no collision 97')
+        if tetris.collisionCheck(pieceRender) == 1: break
         while True:
             wait = False
             # write board and piece to screen
@@ -130,15 +127,26 @@ while True:
             # move the piece down 1 unit, checking for collisions
             pendingPieceRender = tetris.renderPiece(tetris.piece[0], tetris.rotation[0], [tetris.position[0][0], tetris.position[0][1]-1])
             if tetris.collisionCheck(pendingPieceRender) == 1:
-                print('collision 131')
                 tetris.position[0][0] -= 1
                 for x in range(10):
                     for y in range(20):
                         tetris.board[x][y] += pieceRender[x][y]
+                # score the board, adjusting it so there are no completed lines
+                completeLines = list([])
+                for y in range(20):
+                    pixelCount = 0
+                    for x in range(10):
+                        pixelCount += tetris.board[x][y]
+                    if pixelCount == 10:
+                        completeLines.append(y)
+                if length(completeLines) == 0: break
+                elif length(completeLines) == 1: score += (40*(level+1))
+                elif length(completeLines) == 2: score += (100*(level+1))
+                elif length(completeLines) == 3: score += (300*(level+1))
+                elif length(completeLines) == 4: score += (1200*(level+1))
+                lines += length(scorgingLines)
                 break
-            else:
-                print('no collision 138')
-                tetris.position[0][1] -= 1
+            else: tetris.position[0][1] -= 1
             
     lcd.fill_rect(110, 0, 130, 255, 0)
     lcd.fill_rect(0, 0, 110, 30, 0)
