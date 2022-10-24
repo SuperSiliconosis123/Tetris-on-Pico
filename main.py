@@ -139,12 +139,13 @@ while True:
                         pixelCount += tetris.board[x][y]
                     if pixelCount == 10:
                         completeLines.append(y)
-                if length(completeLines) == 0: break
-                elif length(completeLines) == 1: score += (40*(level+1))
-                elif length(completeLines) == 2: score += (100*(level+1))
-                elif length(completeLines) == 3: score += (300*(level+1))
-                elif length(completeLines) == 4: score += (1200*(level+1))
-                lines += length(scorgingLines)
+                if len(completeLines) == 0: break
+                elif len(completeLines) == 1: tetris.score += (40*(level+1))
+                elif len(completeLines) == 2: tetris.score += (100*(level+1))
+                elif len(completeLines) == 3: tetris.score += (300*(level+1))
+                elif len(completeLines) == 4: tetris.score += (1200*(level+1))
+                tetris.lines += len(completeLines)
+                tetris.initStats(level)
                 break
             else: tetris.position[0][1] -= 1
             
