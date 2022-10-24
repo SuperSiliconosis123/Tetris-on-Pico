@@ -146,7 +146,30 @@ while True:
                 elif len(completeLines) == 4: tetris.score += (1200*(level+1))
                 tetris.lines += len(completeLines)
                 tetris.initStats(level)
-                
+                for y in completeLines:
+                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                lcd.show()
+                utime.sleep(0.4)
+                for y in completeLines:
+                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
+                lcd.show()
+                utime.sleep(0.4)
+                for y in completeLines:
+                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                lcd.show()
+                utime.sleep(0.4)
+                for y in completeLines:
+                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 65535)
+                lcd.show()
+                utime.sleep(0.4)
+                for y in completeLines:
+                    fill_rect(8, 39+((y-19)*(-10)), 10, 10, 0)
+                lcd.show()
+                utime.sleep(0.4)
+                for y in completeLines:
+                    for x in range(10):
+                        for i in range(19-y):
+                            board[x][y] = board[x][y+i+1]
                 break
             else: tetris.position[0][1] -= 1
             
