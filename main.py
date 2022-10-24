@@ -146,6 +146,7 @@ while True:
                 elif len(completeLines) == 4: tetris.score += (1200*(level+1))
                 tetris.lines += len(completeLines)
                 tetris.initStats(level)
+                
                 break
             else: tetris.position[0][1] -= 1
             
