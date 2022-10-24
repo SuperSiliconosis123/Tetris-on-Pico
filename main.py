@@ -101,7 +101,7 @@ while True:
             # receive input and update the peice position until the timer runs out
             start = utime.ticks_ms()
             while utime.ticks_ms() - start < ((level-10)*(-100)):
-                if utime.ticks_ms() - timerStart > 200:
+                if utime.ticks_ms() - timerStart > 100:
                     update = False
                     if right.value() == 0:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], tetris.rotation[0], [tetris.position[0][0]-1, tetris.position[0][1]])) == 0:
