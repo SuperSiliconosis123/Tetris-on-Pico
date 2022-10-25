@@ -36,9 +36,10 @@ while True:
         printstring(f.readline().rstrip('\n'), 129, 154, 1, 65535)
         printstring(f.readline().rstrip('\n'), 129, 169, 1, 65535)
         printstring(f.readline().rstrip('\n'), 129, 184, 1, 65535)
+        f.close()
         # draw help text
-        printstring("X: CONTINUE", 133, 220, 1, 65535)
-        printstring("Y: HELP", 150, 230, 1, 65535)
+        printstring("X: HELP", 150, 220, 1, 65535)
+        printstring("Y: CONTINUE", 133, 230, 1, 65535)
         # release the frame
         lcd.show()
         # ========== ACTION ==========
@@ -76,8 +77,8 @@ while True:
                 if left.value() == 0 and level != 0:
                     level -= 1
                     break
-                if keyY.value() == 0: tetris.help()
-                if keyX.value() == 0:
+                if keyX.value() == 0: tetris.help()
+                if keyY.value() == 0:
                     play = True
                     break
                 wait = True
@@ -120,7 +121,7 @@ while True:
             # receive input and update the peice position until the timer runs out
             start = utime.ticks_ms()
             while utime.ticks_ms() - start < ((level-10)*(-100)):
-                if utime.ticks_ms() - timerStart > 100:
+                if utime.ticks_ms() - timerStart > 150:
                     update = False
                     if right.value() == 0:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], tetris.rotation[0], [tetris.position[0][0]-1, tetris.position[0][1]])) == 0:
@@ -130,15 +131,45 @@ while True:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], tetris.rotation[0], [tetris.position[0][0]+1, tetris.position[0][1]])) == 0:
                             tetris.position[0][0] += 1
                             update = True
-                    if keyA.value() == 0:
+                    if keyB.value() == 0:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], ((tetris.rotation[0]+1)%4), tetris.position[0])) == 0:
                             tetris.rotation[0] = ((tetris.rotation[0]+1)%4)
                             update = True
-                    if keyB.value() == 0:
+                    if keyX.value() == 0:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], ((tetris.rotation[0]-1)%4), tetris.position[0])) == 0:
                             tetris.rotation[0] = ((tetris.rotation[0]-1)%4)
                             update = True
-                    if down.value() == 0: break
+                    if keyY.value() == 0:
+                        play = False
+                        utime.sleep(0.5)
+                        while True:
+                            lcd.fill_rect(17, 100, 88, 18, 0)
+                            printstring('PAUSED', 19, 102, 2, 65535)
+                            lcd.show()
+                            start = utime.ticks_ms()
+                            while utime.ticks_ms() - start < 400:
+                                if keyY.value() == 0:
+                                    # rebuild everything
+                                    pieceRender = tetris.renderPiece(tetris.piece[0], tetris.rotation[0], tetris.position[0])
+                                    tetris.render(pieceRender)
+                                    utime.sleep(1)
+                                    play = True
+                                    break
+                            if play == True: break
+                            pieceRender = tetris.renderPiece(tetris.piece[0], tetris.rotation[0], tetris.position[0])
+                            tetris.render(pieceRender)
+                            start = utime.ticks_ms()
+                            while utime.ticks_ms() - start < 400:
+                                if keyY.value() == 0:
+                                    # rebuild everything
+                                    pieceRender = tetris.renderPiece(tetris.piece[0], tetris.rotation[0], tetris.position[0])
+                                    tetris.render(pieceRender)
+                                    utime.sleep(1)
+                                    play = True
+                                    break
+                            if play == True: break
+                    elif down.value() == 0: break
+                    
                     if update == True:
                         pieceRender = tetris.renderPiece(tetris.piece[0], tetris.rotation[0], tetris.position[0])
                         tetris.render(pieceRender)
@@ -204,5 +235,50 @@ while True:
     lcd.fill_rect(110, 35, 130, 220, 0)
     printstring("GAME", 140, 70, 3, 65535)
     printstring("OVER", 140, 100, 3, 65535)
+    # draw highscore grid
+    lcd.rect(125, 135, 102, 60, 65535)
+    lcd.vline(180, 135, 60, 65535)
+    lcd.hline(125, 150, 102, 65535)
+    lcd.hline(125, 165, 102, 65535)
+    lcd.hline(125, 180, 102, 65535)
+    printstring(" NAME  SCORE" ,129, 139, 1, 65535)
+    printstring("PRESS Y TO", 140, 210, 1, 65535)
+    printstring("CONTINUE", 148, 220, 1, 65535)
     lcd.show()
-    break
+    # get high scores for the grid
+    f = open("highscore")
+    line1 = f.readline().rstrip('\n')
+    line2 = f.readline().rstrip('\n')
+    line3 = f.readline().rstrip('\n')
+    f.close()
+    scores = {'score1': int(line1[7:12]), 'score2': int(line2[7:12]), 'score3': int(line3[7:12]), 'myscore': tetris.score}
+    highscores = [key for (key, value) in sorted(scores.items(), key=lambda key_value: key_value[1])]
+    alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '-', '.']
+    nameNumbers = [27, 27, 27, 27, 27, 27]
+    name = ''
+    name = name.join([alphabet[nameNumbers[i]] for i in range(6)])
+    if highscores.index('myscore') == 0:
+        line3 = line2
+        line2 = line1
+        line1 = str(name+' '+zfill(str(tetris.score), 5))
+    elif highscores.index('myscore') == 1:
+        line3 = line2
+        line2 = str(name+' '+zfill(str(tetris.score), 5))
+    elif highscores.index('myscore') == 2:
+        line3 = str(name+' '+zfill(str(tetris.score), 5))
+    printstring(line1, 129, 154, 1, 65535)
+    printstring(line2, 129, 169, 1, 65535)
+    printstring(line3, 129, 184, 1, 65535)
+    lcd.show()
+    while True:
+        if keyY.value() == 0: break
+    board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
