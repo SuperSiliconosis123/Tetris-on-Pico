@@ -126,19 +126,19 @@ while True:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], tetris.rotation[0], [tetris.position[0][0]-1, tetris.position[0][1]])) == 0:
                             tetris.position[0][0] -= 1
                             update = True
-                    elif left.value() == 0:
+                    if left.value() == 0:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], tetris.rotation[0], [tetris.position[0][0]+1, tetris.position[0][1]])) == 0:
                             tetris.position[0][0] += 1
                             update = True
-                    elif keyA.value() == 0:
+                    if keyA.value() == 0:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], ((tetris.rotation[0]+1)%4), tetris.position[0])) == 0:
                             tetris.rotation[0] = ((tetris.rotation[0]+1)%4)
                             update = True
-                    elif keyB.value() == 0:
+                    if keyB.value() == 0:
                         if tetris.collisionCheck(tetris.renderPiece(tetris.piece[0], ((tetris.rotation[0]-1)%4), tetris.position[0])) == 0:
                             tetris.rotation[0] = ((tetris.rotation[0]-1)%4)
                             update = True
-                    elif down.value() == 0: break
+                    if down.value() == 0: break
                     if update == True:
                         pieceRender = tetris.renderPiece(tetris.piece[0], tetris.rotation[0], tetris.position[0])
                         tetris.render(pieceRender)
