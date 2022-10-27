@@ -294,6 +294,17 @@ def printstring(string,xpos,ypos,size,c):
     for i in string:
         printchar(i,xpos,ypos,size,c)
         xpos+=spacing
+
+def centrestring(string,ypos,size,c):
+    if size == 1:
+        spacing = 8
+    if size == 2:
+        spacing = 14
+    if size == 3:
+        spacing = 18
+    used = len(string)*spacing
+    xpos = int((240-used)/2)
+    printstring(string,xpos,ypos,size,c)
 # ========= End of Improved text system ==================
 
 # Colour Mixing Routine
@@ -321,18 +332,50 @@ ctrl = Pin(3,Pin.IN,Pin.PULL_UP)
 class tetris():
     def help():
         lcd.fill(0)
-        printstring("Sorry!", 80, 50, 3, 65535)
+        centrestring("Sorry!", 50, 3, 65535)
         lcd.show()
-        printstring("This Feature is", 70, 100, 2, 65535)
-        printstring("Still in", 100, 120, 2, 65535)
-        printstring("Development!", 90, 140, 2, 65535)
+        centrestring("This Feature is", 100, 2, 65535)
+        centrestring("Still in", 120, 2, 65535)
+        printstring("Development!", 140, 2, 65535)
         utime.sleep(1)
         lcd.show()
-        printstring("Press Y to Continue", 100, 180, 1, 65535)
+        centrestring("Press Y to Continue", 180, 1, 65535)
         utime.sleep(1)
         lcd.show()
         while True:
-            if keyY.value() == 0: break
+            if keyX.value() == 0: break
+        lcd.fill(0)
+        # TETRIS side of the screen
+        printstring("TETRIS", 5, 5, 3, 65535)
+        lcd.rect(7, 38, 102, 202, 65535)
+        # level select outline and text
+        printstring("LEVEL", 145, 30, 2, 65535)
+        lcd.rect(126, 50, 101, 41, 65535)
+        lcd.hline(126, 70, 100, 65535)
+        lcd.vline(146, 50, 40, 65535)
+        lcd.vline(166, 50, 40, 65535)
+        lcd.vline(186, 50, 40, 65535)
+        lcd.vline(206, 50, 40, 65535)
+        # draw highscore grid
+        lcd.rect(125, 135, 102, 60, 65535)
+        lcd.vline(180, 135, 60, 65535)
+        lcd.hline(125, 150, 102, 65535)
+        lcd.hline(125, 165, 102, 65535)
+        lcd.hline(125, 180, 102, 65535)
+        printstring(" NAME  SCORE" ,129, 139, 1, 65535)
+        # get high scores for the grid
+        f = open("highscore")
+        printstring(f.readline().rstrip('\n'), 129, 154, 1, 65535)
+        printstring(f.readline().rstrip('\n'), 129, 169, 1, 65535)
+        printstring(f.readline().rstrip('\n'), 129, 184, 1, 65535)
+        f.close()
+        # draw help text
+        printstring("X: HELP", 150, 220, 1, 65535)
+        printstring("Y: CONTINUE", 133, 230, 1, 65535)
+        # release the frame
+        lcd.show()
+        while True:
+            if keyX.value() == 0: break
         
     
     # board is for hitboxes and collision detection 
