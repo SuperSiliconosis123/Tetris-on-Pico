@@ -304,11 +304,11 @@ def centrestring(string,ypos,size,c):
         spacing = 18
     used = len(string)*spacing
     xpos = int((240-used)/2)
-    printstring(string,xpos,ypos,size,c)
+    printstring(string, xpos, ypos, size, c)
 # ========= End of Improved text system ==================
 
 # Colour Mixing Routine
-colour = lambda R, G, B: (((R&0xF8)*256) + ((G&0xFC)*8) + ((B&0xF8)>>3) & 0xFF) *256  + int((mix1 & 0xFF00) /256) # low nibble first
+colour = lambda R, G, B: (((R&0xF8)*256) + ((G&0xFC)*8) + ((B&0xF8)>>3) & 0xFF) *256  + int((((R&0xF8)*256) + ((G&0xFC)*8) + ((B&0xF8)>>3) & 0xFF00) /256) # low nibble first
 
 #same function as zfill:
 zfill = lambda string, width: '{:0>{w}}'.format(string, w=width)
@@ -336,46 +336,45 @@ class tetris():
         lcd.show()
         centrestring("This Feature is", 100, 2, 65535)
         centrestring("Still in", 120, 2, 65535)
-        printstring("Development!", 140, 2, 65535)
+        centrestring("Development!", 140, 2, 65535)
         utime.sleep(1)
         lcd.show()
-        centrestring("Press Y to Continue", 180, 1, 65535)
+        centrestring("Press X to Continue", 180, 1, 65535)
         utime.sleep(1)
         lcd.show()
         while True:
-            if keyX.value() == 0: break
-        lcd.fill(0)
-        # TETRIS side of the screen
-        printstring("TETRIS", 5, 5, 3, 65535)
-        lcd.rect(7, 38, 102, 202, 65535)
-        # level select outline and text
-        printstring("LEVEL", 145, 30, 2, 65535)
-        lcd.rect(126, 50, 101, 41, 65535)
-        lcd.hline(126, 70, 100, 65535)
-        lcd.vline(146, 50, 40, 65535)
-        lcd.vline(166, 50, 40, 65535)
-        lcd.vline(186, 50, 40, 65535)
-        lcd.vline(206, 50, 40, 65535)
-        # draw highscore grid
-        lcd.rect(125, 135, 102, 60, 65535)
-        lcd.vline(180, 135, 60, 65535)
-        lcd.hline(125, 150, 102, 65535)
-        lcd.hline(125, 165, 102, 65535)
-        lcd.hline(125, 180, 102, 65535)
-        printstring(" NAME  SCORE" ,129, 139, 1, 65535)
-        # get high scores for the grid
-        f = open("highscore")
-        printstring(f.readline().rstrip('\n'), 129, 154, 1, 65535)
-        printstring(f.readline().rstrip('\n'), 129, 169, 1, 65535)
-        printstring(f.readline().rstrip('\n'), 129, 184, 1, 65535)
-        f.close()
-        # draw help text
-        printstring("X: HELP", 150, 220, 1, 65535)
-        printstring("Y: CONTINUE", 133, 230, 1, 65535)
-        # release the frame
-        lcd.show()
-        while True:
-            if keyX.value() == 0: break
+            if keyX.value() == 0:
+                lcd.fill(0)
+                # TETRIS side of the screen
+                printstring("TETRIS", 5, 5, 3, 65535)
+                lcd.rect(7, 38, 102, 202, 65535)
+                # level select outline and text
+                printstring("LEVEL", 145, 30, 2, 65535)
+                lcd.rect(126, 50, 101, 41, 65535)
+                lcd.hline(126, 70, 100, 65535)
+                lcd.vline(146, 50, 40, 65535)
+                lcd.vline(166, 50, 40, 65535)
+                lcd.vline(186, 50, 40, 65535)
+                lcd.vline(206, 50, 40, 65535)
+                # draw highscore grid
+                lcd.rect(120, 135, 112, 60, 65535)
+                lcd.vline(175, 135, 60, 65535)
+                lcd.hline(120, 150, 112, 65535)
+                lcd.hline(120, 165, 112, 65535)
+                lcd.hline(120, 180, 112, 65535)
+                printstring(" NAME  SCORE" ,129, 139, 1, 65535)
+                # get high scores for the grid
+                with open("highscore") as f:
+                    printstring(f.readline().rstrip('\n'), 124, 154, 1, 65535)
+                    printstring(f.readline().rstrip('\n'), 124, 169, 1, 65535)
+                    printstring(f.readline().rstrip('\n'), 124, 184, 1, 65535)
+                # draw help text
+                printstring("X: HELP", 150, 220, 1, 65535)
+                printstring("Y: CONTINUE", 133, 230, 1, 65535)
+                # release the frame
+                lcd.show()
+                utime.sleep(0.3)
+                break
         
     
     # board is for hitboxes and collision detection 
@@ -406,8 +405,8 @@ class tetris():
     
     def updateStats(level):
         lcd.fill_rect(130, 5, 125, 20, 0)
-        printstring("SCORE: " + '{:0>{w}}'.format(str(int(tetris.score)), w=5), 130, 5, 1, 65535)
-        printstring("LINES: " + '{:0>{w}}'.format(str(int(tetris.lines)), w=4), 135, 15, 1, 65535)
+        printstring("SCORE: " + '{:0>{w}}'.format(str(int(tetris.score)), w=6), 130, 5, 1, 65535)
+        printstring("LINES: " + '{:0>{w}}'.format(str(int(tetris.lines)), w=5), 135, 15, 1, 65535)
         printstring("LEVEL: " + str(level), 148, 25, 1, 65535)
         # lcd.fill_rect(160, 43, statistic, 14, 65535)
         lcd.show()
