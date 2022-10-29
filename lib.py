@@ -651,3 +651,4 @@ class tetris():
                 if tetris.board[x][y] == 1 or pieceRender[x][y] == 1:
                     lcd.fill_rect(8+((x-9)*(-10)), 39+((y-19)*(-10)), 10, 10, 65535)
         lcd.show()
+    
