@@ -237,11 +237,11 @@ while True:
     printstring("GAME", 140, 70, 3, 65535)
     printstring("OVER", 140, 100, 3, 65535)
     # draw highscore grid
-    lcd.rect(125, 135, 102, 60, 65535)
-    lcd.vline(180, 135, 60, 65535)
-    lcd.hline(125, 150, 102, 65535)
-    lcd.hline(125, 165, 102, 65535)
-    lcd.hline(125, 180, 102, 65535)
+    lcd.rect(120, 135, 112, 60, 65535)
+    lcd.vline(175, 135, 60, 65535)
+    lcd.hline(120, 150, 112, 65535)
+    lcd.hline(120, 165, 112, 65535)
+    lcd.hline(120, 180, 112, 65535)
     printstring(" NAME  SCORE" ,129, 139, 1, 65535)
     printstring("PRESS Y TO", 140, 210, 1, 65535)
     printstring("CONTINUE", 148, 220, 1, 65535)
@@ -266,19 +266,19 @@ while True:
         line2 = str(name+' '+zfill(str(tetris.score), 6))
     elif highscores.index('myscore') == 1:
         line3 = str(name+' '+zfill(str(tetris.score), 6))
-    printstring(line1, 129, 154, 1, 65535)
-    printstring(line2, 129, 169, 1, 65535)
-    printstring(line3, 129, 184, 1, 65535)
+    printstring(line1, 124, 154, 1, 65535)
+    printstring(line2, 124, 169, 1, 65535)
+    printstring(line3, 124, 184, 1, 65535)
     lcd.show()
     highlight = False
     c = colour(240, 240, 240)
     if highscores.index('myscore') != 0:
         while True:
             highlight = not highlight
-            lcd.fill_rect(129, 153+((highscores.index('myscore')-3)*(-15)), 48, 10, 0)
-            if highlight == True: lcd.fill_rect(128+(inputIndex*8), 154+((highscores.index('myscore')-3)*(-15)), 8, 8, c)
-            else: lcd.fill_rect(128+(inputIndex*8), 154+((highscores.index('myscore')-3)*(-15)), 8, 8, 0)
-            printstring(name, 129, 154+((highscores.index('myscore')-3)*(-15)), 1, 65535)
+            lcd.fill_rect(124, 153+((highscores.index('myscore')-3)*(-15)), 48, 10, 0)
+            if highlight == True: lcd.fill_rect(123+(inputIndex*8), 154+((highscores.index('myscore')-3)*(-15)), 8, 8, c)
+            else: lcd.fill_rect(123+(inputIndex*8), 154+((highscores.index('myscore')-3)*(-15)), 8, 8, 0)
+            printstring(name, 124, 154+((highscores.index('myscore')-3)*(-15)), 1, 65535)
             lcd.show()
             if utime.ticks_ms() - start > 150:
                 if up.value() == 0:
@@ -296,13 +296,14 @@ while True:
                     inputIndex -= 1
                     start = utime.ticks_ms()
                 elif keyY.value() == 0: break
-    if highscores.index('myscore') == 3: line1 = str(name+' '+zfill(str(tetris.score), 5))
-    elif highscores.index('myscore') == 2: line2 = str(name+' '+zfill(str(tetris.score), 5))
-    elif highscores.index('myscore') == 1: line3 = str(name+' '+zfill(str(tetris.score), 5))
+    if highscores.index('myscore') == 3: line1 = str(name+' '+zfill(str(tetris.score), 6))
+    elif highscores.index('myscore') == 2: line2 = str(name+' '+zfill(str(tetris.score), 6))
+    elif highscores.index('myscore') == 1: line3 = str(name+' '+zfill(str(tetris.score), 6))
     with open('highscore', 'w') as f:
         f.write(line1+'\n'+line2+'\n'+line3+'\n')
     while True:
         if keyY.value() == 0: break
+    score = 0
     tetris.board = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
