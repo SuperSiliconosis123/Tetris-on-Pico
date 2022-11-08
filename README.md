@@ -12,3 +12,4 @@ You can build lib.py from source using `mpy-cross`.
 ```bash
 pi@raspberrypi:/Tetris-on-Pico-master~ $ mpy-cross lib.py
 ```
+###### GPIO used: 2, 3, 9, 8, 10, 11, 12, 13, 15, 16, 17, 18, 19, 20, 21
